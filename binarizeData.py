@@ -6,7 +6,7 @@ import numpy as np
 
 def BinarizeData():
 
-    data = np.genfromtxt("income-data/income.train.txt",
+    rawData = np.genfromtxt("income-data/income.train.txt",
            dtype=[('f0', '<U4'), ('f1', 'U17'),
                   ('f2', 'U13'), ('f3', 'U22'),
                   ('f4', 'U18'), ('f5', 'U19'),
@@ -14,7 +14,7 @@ def BinarizeData():
                   ('f8', 'U27'), ('f9', 'U6')],
            delimiter=", ")
 
-    data = np.array(data.tolist())
+    data = np.array(rawData.tolist())
 
     for i in range(0, len(data)):
         data[i, 0] = 'Age ' + data[i, 0]
