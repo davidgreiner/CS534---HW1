@@ -76,7 +76,7 @@ for index,row in enumerate(data):
             newdata[index][count] = 0
         count += 1
     for i in salary:
-        if i == row[9ter]:
+        if i == row[9]:
             newdata[index][count] = 1
         else:
             newdata[index][count] = 0
