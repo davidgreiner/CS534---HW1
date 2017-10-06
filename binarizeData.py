@@ -20,10 +20,10 @@ def BinarizeData(dataSet, sort=0, shuffle=0):
             rawData = np.sort(rawData, order='f9', axis=0)
             rawData = np.flip(rawData, axis=0)
 
-        if shuffle == 1:
-            rawData = np.random.shuffle(rawData)
-
         data = np.array(rawData.tolist())
+
+        if shuffle == 1:
+            np.random.shuffle(data)
 
         for i in range(0, len(data)):
             data[i, 0] = 'Age ' + data[i, 0]
