@@ -23,7 +23,7 @@ while epochCount <= totalEpoch:
 
     for i in range(0, numberTrainingData):
 
-        if currentTrainingCount % 1000 == 0:
+        if currentTrainingCount % 200 == 0:
 
             devError = DevEvaluator(weightVector,
                                     featureArray, devDataArray)
