@@ -11,7 +11,7 @@ devDataArray = BinarizeData("dev")
 
 weightVector = np.zeros((len(featureArray)))
 epochCount = 1
-totalEpoch = 2
+totalEpoch = 5
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 0
 bestErrorRate = 100.0

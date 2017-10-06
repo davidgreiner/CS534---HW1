@@ -12,7 +12,7 @@ devDataArray = BinarizeData("dev")
 weightVector = np.zeros((len(featureArray)))
 weightVectorAveraged = np.zeros((len(featureArray)))
 epochCount = 1
-totalEpoch = 2
+totalEpoch = 5
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 1
 bestErrorRate = 100.0
@@ -65,3 +65,5 @@ while epochCount <= totalEpoch:
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
+print(str(weightVectorAveraged))
+print(str(len(featureArray)))
