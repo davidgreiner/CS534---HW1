@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from binarizeData import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
@@ -13,6 +14,10 @@ epochCount = 1
 totalEpoch = 2
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 0
+bestErrorRate = 100.0
+epochIteration = 0
+
+start_time = time.time()
 
 while epochCount <= totalEpoch:
 
@@ -24,6 +29,10 @@ while epochCount <= totalEpoch:
                                     featureArray, devDataArray)
 
             epochFraction = (i / numberTrainingData) * epochCount
+
+            if devError < bestErrorRate:
+                bestErrorRate = devError
+                epochIteration = epochFraction
 
             print("The error rate for epoch " + str(epochFraction) + \
                   " is " + str(devError) + "%")
@@ -46,3 +55,7 @@ while epochCount <= totalEpoch:
         currentTrainingCount += 1
 
     epochCount += 1
+
+print("The program ran for %s seconds" % (time.time() - start_time))
+print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
+      str(epochIteration))
