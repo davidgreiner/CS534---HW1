@@ -18,7 +18,7 @@ currentTrainingCount = 1
 bestErrorRate = 100.0
 epochIteration = 0
 
-start_time = time.time()
+startTime = time.time()
 
 while epochCount <= totalEpoch:
 
@@ -62,6 +62,6 @@ while epochCount <= totalEpoch:
 
     epochCount += 1
 
-print("The program ran for %s seconds" % (time.time() - start_time))
+print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))

@@ -17,7 +17,7 @@ currentTrainingCount = 0
 bestErrorRate = 100.0
 epochIteration = 0
 
-start_time = time.time()
+startTime = time.time()
 
 while epochCount <= totalEpoch:
 
@@ -48,7 +48,7 @@ while epochCount <= totalEpoch:
         if y*(weightVector[idx].sum() + weightVector[-1]) <= 0:
             
             weightVector[idx] = weightVector[idx] + \
-            y*np.ones((len(trainDataArray[i, 0:-1])))
+            y*np.ones(len(trainDataArray[i, 0:-1]))
 
             weightVector[-1] = weightVector[-1] + y
 
@@ -56,6 +56,6 @@ while epochCount <= totalEpoch:
 
     epochCount += 1
 
-print("The program ran for %s seconds" % (time.time() - start_time))
+print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
