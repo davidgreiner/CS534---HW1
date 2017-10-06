@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 from binarizeData import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
@@ -18,6 +19,9 @@ currentTrainingCount = 1
 bestErrorRate = 100.0
 epochIteration = 0
 
+devErrorPlot = []
+epochFractionPlot = []
+
 startTime = time.time()
 
 while epochCount <= totalEpoch:
@@ -30,6 +34,9 @@ while epochCount <= totalEpoch:
                                     featureArray, devDataArray)
 
             epochFraction = (i / numberTrainingData) * epochCount
+
+            devErrorPlot.append(devError)
+            epochFractionPlot.append(epochFraction)
 
             if devError < bestErrorRate:
                 bestErrorRate = devError
@@ -71,3 +78,7 @@ print("The most positive features are: " + str(featureArray[positiveFeatures]) +
 negativeFeatures = weightVectorAveraged.argsort()[0:5][::-1]
 print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
       " with weights of: " + str(weightVectorAveraged[negativeFeatures]))
+
+plt.plot(epochFractionPlot, devErrorPlot, 'ro')
+plt.axis([0, 1, 0, 100])
+plt.show()

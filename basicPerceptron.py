@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 from binarizeData import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
@@ -17,6 +18,9 @@ currentTrainingCount = 0
 bestErrorRate = 100.0
 epochIteration = 0
 
+devErrorPlot = []
+epochFractionPlot = []
+
 startTime = time.time()
 
 while epochCount <= totalEpoch:
@@ -29,6 +33,9 @@ while epochCount <= totalEpoch:
                                     featureArray, devDataArray)
 
             epochFraction = (i / numberTrainingData) * epochCount
+
+            devErrorPlot.append(devError)
+            epochFractionPlot.append(epochFraction)
 
             if devError < bestErrorRate:
                 bestErrorRate = devError
@@ -59,3 +66,7 @@ while epochCount <= totalEpoch:
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
+
+plt.plot(epochFractionPlot, devErrorPlot, 'ro')
+plt.axis([0, 1, 0, 100])
+plt.show()
