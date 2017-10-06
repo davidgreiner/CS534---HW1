@@ -4,7 +4,7 @@ import numpy as np
 ## Find unique features and construct feature array to be used
 ## in Perceptron.
 
-def BinarizeData(dataSet):
+def BinarizeData(dataSet, sort=0, shuffle=0):
 
     if dataSet == "train" or "dev" or "test":
 
@@ -15,6 +15,13 @@ def BinarizeData(dataSet):
                       ('f6', 'U7'), ('f7', '<i4'),
                       ('f8', 'U27'), ('f9', 'U6')],
                delimiter=", ")
+
+        if sort == 1:
+            rawData = np.sort(rawData, order='f9', axis=0)
+            rawData = np.flip(rawData, axis=0)
+
+        if shuffle == 1:
+            rawData = np.random.shuffle(rawData)
 
         data = np.array(rawData.tolist())
 

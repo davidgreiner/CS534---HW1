@@ -7,7 +7,7 @@ from Dev_Evaluator import DevEvaluator
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-featureArray, trainDataArray = BinarizeData("train")
+featureArray, trainDataArray = BinarizeData("train", shuffle=1)
 devDataArray = BinarizeData("dev")
 
 weightVector = np.zeros((len(featureArray)))
