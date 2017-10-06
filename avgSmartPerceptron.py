@@ -65,5 +65,9 @@ while epochCount <= totalEpoch:
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
-print(str(weightVectorAveraged))
-print(str(len(featureArray)))
+positiveFeatures = weightVectorAveraged.argsort()[-5:][::-1]
+print("The most positive features are: " + str(featureArray[positiveFeatures]) + \
+      " with weights of: " + str(weightVectorAveraged[positiveFeatures]))
+negativeFeatures = weightVectorAveraged.argsort()[0:5][::-1]
+print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
+      " with weights of: " + str(weightVectorAveraged[negativeFeatures]))
