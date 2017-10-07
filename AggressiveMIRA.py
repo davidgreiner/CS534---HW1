@@ -7,12 +7,14 @@ from Dev_Evaluator import DevEvaluator
 ## Basic Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-featureArray, trainDataArray = BinarizeData("train")
+featureArray, trainDataArray = BinarizeData("train", shuffle=1)
 devDataArray = BinarizeData("dev")
+
+p = 0.5
 
 weightVector = np.zeros((len(featureArray)))
 epochCount = 0
-totalEpoch = 1
+totalEpoch = 5
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 0
 bestErrorRate = 100.0
@@ -27,7 +29,7 @@ while epochCount < totalEpoch:
 
     for i in range(0, numberTrainingData):
 
-        if currentTrainingCount % 200 == 0:
+        if currentTrainingCount % 1000 == 0:
 
             devError = DevEvaluator(weightVector,
                                     featureArray, devDataArray)
@@ -52,13 +54,34 @@ while epochCount < totalEpoch:
 
         idx = np.isin(featureArray, trainDataArray[i, 0:-1])
 
-        if y*(weightVector[idx].sum() + weightVector[-1]) <= 0:
+        decision = y*(weightVector[idx].sum() + weightVector[-1])
+
+        if decision < p:
+
+            if decision > 0:
+
+                marginCorrection = ( (p*y - np.sum(weightVector[idx]) - weightVector[-1]) / \
+                  np.sum(np.power(np.ones(len(trainDataArray[i, :])), 2)) )
+
+                weightVector[idx] = weightVector[idx] + \
+                  marginCorrection * np.ones(len(trainDataArray[i, 0:-1]))
+
+                weightVector[-1] = weightVector[-1] + marginCorrection
+
+##                check = y * (weightVector[idx].sum() + weightVector[-1])
+##                print(check)
             
+            marginCorrection = ( (y - np.sum(weightVector[idx]) - weightVector[-1]) / \
+              np.sum(np.power(np.ones(len(trainDataArray[i, :])), 2)) )
+
             weightVector[idx] = weightVector[idx] + \
-            y*np.ones(len(trainDataArray[i, 0:-1]))
+              marginCorrection * np.ones(len(trainDataArray[i, 0:-1]))
 
-            weightVector[-1] = weightVector[-1] + y
+            weightVector[-1] = weightVector[-1] + marginCorrection
 
+##            check = y * (weightVector[idx].sum() + weightVector[-1])
+##            print(check)
+            
         currentTrainingCount += 1
 
     epochCount += 1

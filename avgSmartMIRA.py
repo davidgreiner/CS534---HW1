@@ -54,16 +54,24 @@ while epochCount < totalEpoch:
         idx = np.isin(featureArray, trainDataArray[i, 0:-1])
 
         if y*(weightVector[idx].sum() + weightVector[-1]) <= 0:
+
+            marginCorrection = ( (y - np.sum(weightVector[idx]) - weightVector[-1]) / \
+              np.sum(np.power(np.ones(len(trainDataArray[i, :])), 2)) )
             
             weightVector[idx] = weightVector[idx] + \
-            y*np.ones(len(trainDataArray[i, 0:-1]))
+            marginCorrection*np.ones(len(trainDataArray[i, 0:-1]))
 
-            weightVector[-1] = weightVector[-1] + y
+            weightVector[-1] = weightVector[-1] + marginCorrection
 
             weightVectorAveraged[idx] = weightVectorAveraged[idx] + \
-            currentTrainingCount * y * np.ones(len(trainDataArray[i, 0:-1]))
+            currentTrainingCount * marginCorrection * \
+            np.ones(len(trainDataArray[i, 0:-1]))
 
-            weightVectorAveraged[-1] = weightVectorAveraged[-1] + currentTrainingCount * y
+            weightVectorAveraged[-1] = weightVectorAveraged[-1] + \
+                                       currentTrainingCount * marginCorrection
+
+##            check = y * (weightVector[idx].sum() + weightVector[-1])
+##            print(check)
 
         currentTrainingCount += 1
 

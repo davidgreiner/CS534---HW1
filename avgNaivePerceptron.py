@@ -8,8 +8,8 @@ devDataArray = BinarizeData("dev")
 
 weightVector = np.zeros(len(featureArray))
 cachedweight = np.zeros(len(featureArray))
-epochCount = 1
-totalEpoch = 5
+epochCount = 0
+totalEpoch = 1
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 1
 bestErrorRate = 100.0
@@ -17,7 +17,7 @@ epochIteration = 0
 
 startTime = time.time()
 
-while epochCount <= totalEpoch:
+while epochCount < totalEpoch:
     
     for i in range(len(trainDataArray)):
 
@@ -25,7 +25,7 @@ while epochCount <= totalEpoch:
 
             devError = DevEvaluator(cachedweight / (currentTrainingCount), featureArray, devDataArray)
 
-            epochFraction = (i / numberTrainingData) * epochCount
+            epochFraction = (i / numberTrainingData) + epochCount
 
             if devError < bestErrorRate:
                 bestErrorRate = devError
@@ -61,3 +61,10 @@ while epochCount <= totalEpoch:
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
+
+positiveFeatures = cachedweight.argsort()[-5:][::-1]
+print("The most positive features are: " + str(featureArray[positiveFeatures]) + \
+      " with weights of: " + str(cachedweight[positiveFeatures]))
+negativeFeatures = cachedweight.argsort()[0:5][::-1]
+print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
+      " with weights of: " + str(cachedweight[negativeFeatures]))

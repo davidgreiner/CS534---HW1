@@ -7,8 +7,10 @@ from Dev_Evaluator import DevEvaluator
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-featureArray, trainDataArray = BinarizeData("train", sort=0, shuffle=0)
+featureArray, trainDataArray = BinarizeData("train", sort=0, shuffle=1)
 devDataArray = BinarizeData("dev")
+
+p = 1.0
 
 weightVector = np.zeros((len(featureArray)))
 weightVectorAveraged = np.zeros((len(featureArray)))
@@ -25,6 +27,8 @@ epochFractionPlot = []
 startTime = time.time()
 
 while epochCount < totalEpoch:
+
+    np.random.shuffle(trainDataArray)
 
     for i in range(0, numberTrainingData):
 
@@ -53,17 +57,44 @@ while epochCount < totalEpoch:
 
         idx = np.isin(featureArray, trainDataArray[i, 0:-1])
 
-        if y*(weightVector[idx].sum() + weightVector[-1]) <= 0:
+        decision = y*(weightVector[idx].sum() + weightVector[-1])
+
+        if decision < p:
+
+            if decision > 0:
+
+                marginCorrection = ( (p*y - np.sum(weightVector[idx]) - weightVector[-1]) / \
+                  np.sum(np.power(np.ones(len(trainDataArray[i, :])), 2)) )
+            
+                weightVector[idx] = weightVector[idx] + \
+                marginCorrection*np.ones(len(trainDataArray[i, 0:-1]))
+
+                weightVector[-1] = weightVector[-1] + marginCorrection
+
+                weightVectorAveraged[idx] = weightVectorAveraged[idx] + \
+                currentTrainingCount * marginCorrection * \
+                np.ones(len(trainDataArray[i, 0:-1]))
+
+                weightVectorAveraged[-1] = weightVectorAveraged[-1] + \
+                                           currentTrainingCount * marginCorrection
+
+            marginCorrection = ( (y - np.sum(weightVector[idx]) - weightVector[-1]) / \
+              np.sum(np.power(np.ones(len(trainDataArray[i, :])), 2)) )
             
             weightVector[idx] = weightVector[idx] + \
-            y*np.ones(len(trainDataArray[i, 0:-1]))
+            marginCorrection*np.ones(len(trainDataArray[i, 0:-1]))
 
-            weightVector[-1] = weightVector[-1] + y
+            weightVector[-1] = weightVector[-1] + marginCorrection
 
             weightVectorAveraged[idx] = weightVectorAveraged[idx] + \
-            currentTrainingCount * y * np.ones(len(trainDataArray[i, 0:-1]))
+            currentTrainingCount * marginCorrection * \
+            np.ones(len(trainDataArray[i, 0:-1]))
 
-            weightVectorAveraged[-1] = weightVectorAveraged[-1] + currentTrainingCount * y
+            weightVectorAveraged[-1] = weightVectorAveraged[-1] + \
+                                       currentTrainingCount * marginCorrection
+
+##            check = y * (weightVector[idx].sum() + weightVector[-1])
+##            print(check)
 
         currentTrainingCount += 1
 
