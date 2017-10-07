@@ -1,11 +1,14 @@
 import numpy as np
 
-##<<<<<<< HEAD
 ## Load training data and convert into two-dimensional array.
 ## Find unique features and construct feature array to be used
 ## in Perceptron.
 
+<<<<<<< HEAD
 def BinarizeData(dataSet):
+=======
+def BinarizeData(dataSet, sort=0, shuffle=0):
+>>>>>>> 64a591a41c81173995ef0b9a82cd8993226ced08
 
     if dataSet == "train" or "dev" or "test":
 
@@ -17,8 +20,20 @@ def BinarizeData(dataSet):
                       ('f8', 'U27'), ('f9', 'U6')],
                delimiter=", ")
 
+<<<<<<< HEAD
         data = np.array(rawData.tolist())
 
+=======
+        if sort == 1:
+            rawData = np.sort(rawData, order='f9', axis=0)
+            rawData = np.flip(rawData, axis=0)
+
+        data = np.array(rawData.tolist())
+
+        if shuffle == 1:
+            np.random.shuffle(data)
+
+>>>>>>> 64a591a41c81173995ef0b9a82cd8993226ced08
         for i in range(0, len(data)):
             data[i, 0] = 'Age ' + data[i, 0]
             data[i, 7] = data[i, 7] + ' Hours'
@@ -50,6 +65,7 @@ def BinarizeData(dataSet):
 
         print("Invalid file name")
         return
+<<<<<<< HEAD
 ##=======
 
 ##def BinarizeData():
@@ -138,3 +154,5 @@ def BinarizeData(dataSet):
 ##
 ##    return newdata, columns
 ##>>>>>>> 3482cde8755e79c4d2ee5ac2852bd61122ccc1c4
+=======
+>>>>>>> 64a591a41c81173995ef0b9a82cd8993226ced08
