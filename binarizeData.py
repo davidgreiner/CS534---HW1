@@ -53,8 +53,12 @@ def BinarizeData(dataSet, sort=0, shuffle=0):
             for i in range(0, len(data)):
                 row = np.isin(featureArray, data[i, 0:-1])
                 binarizedData.append(row)
+
+            toInt = lambda i: int(i == '>50K')
+            toIntFunc = np.vectorize(toInt)
+            salary = toIntFunc(data[:,-1:])
             
-            finalData = np.concatenate([binarizedData,data[:,-1:]], axis=1)
+            finalData = np.concatenate([binarizedData,salary], axis=1)
             
             return featureArray, finalData
 
