@@ -48,7 +48,15 @@ def BinarizeData(dataSet, sort=0, shuffle=0):
                         maritalstatus, occupation, race,
                         gender, workhours, country, ['Bias']))
 
-            return featureArray, data
+
+            binarizedData = []
+            for i in range(0, len(data)):
+                row = np.isin(featureArray, data[i, 0:-1])
+                binarizedData.append(row)
+            
+            finalData = np.concatenate([binarizedData,data[:,-1:]], axis=1)
+            
+            return featureArray, finalData
 
         else:
 
