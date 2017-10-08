@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from binarizeData import BinarizeData
+from replacingBinarized import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
 ## Basic Perceptron algorithm for binary classification
@@ -52,7 +52,7 @@ while epochCount < totalEpoch:
 
         idx = trainDataArray[i, 0:-1]
 
-        if y*(np.dot(idx, weightVector) + weightVector[-1]) <= 0:
+        if y*np.dot(idx, weightVector) <= 0:
             
             weightVector[idx] = weightVector[idx] + \
             y*np.ones(len(trainDataArray[i, 0:-1]))
