@@ -58,8 +58,8 @@ def BinarizeData(dataSet, sort=0, shuffle=0):
             #print(newdata)
 
             for i in range(0, len(data)):
-                row = np.isin(featureArray, data[i, :-1])
-                row2 = np.append(row.astype(int), [data[i, 0], data[i, 7]])
+                row = np.isin(featureArray[:-3], data[i, :-1])
+                row2 = np.append(row.astype(int), [data[i, 0], data[i, 7], 1])
                 
                 
                 binarizedData.append(row2.astype(int))
