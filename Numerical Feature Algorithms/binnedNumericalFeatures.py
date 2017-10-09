@@ -110,10 +110,43 @@ def BinarizeData(sort=0, shuffle=0):
     #print(len(finalData[0]))
 
     for i in range(0, len(devData)):
-        devRow = np.isin(featureArray[:-3], devData[i, :-3])
-        devRow2 = np.append(devRow.astype(int), [devData[i, 0], devData[i, 7], 1])
+        devRow = np.isin(featureArray[:-12], devData[i, :-1])
+
+        ageBinned = np.ones(5)
+        workhoursBinned = np.ones(6)
+
+        age_int = int(devData[i, 0])
+        workhours_int = int(devData[i, 7])
+        
+        if age_int <= 17:
+            ageBinned[0] = 1;
+        elif age_int <= 30:
+            ageBinned[1] = 1;
+        elif age_int <= 50:
+            ageBinned[2] = 1;
+        elif age_int <= 70:
+            ageBinned[3] = 1;
+        else:
+            ageBinned[4] = 1;
+
+        if workhours_int <= 10:
+            workhoursBinned[0] = 1;
+        elif workhours_int <= 20:
+            workhoursBinned[1] = 1;
+        elif workhours_int <= 30:
+            workhoursBinned[2] = 1;
+        elif workhours_int <= 40:
+            workhoursBinned[3] = 1;
+        elif workhours_int <= 50:
+            workhoursBinned[4] = 1;
+        else:
+            workhoursBinned[5] = 1;
+        
+        devRow2 = np.append(devRow.astype(int), ageBinned)
+        devRow3 = np.append(devRow2, workhoursBinned)
+        devRow4 = np.append(devRow3, [1])
               
-        binarizedDevData.append(devRow2.astype(int))
+        binarizedDevData.append(devRow4.astype(int))
         #print(binarizedData[i])
 
 
