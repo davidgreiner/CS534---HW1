@@ -9,7 +9,7 @@ from Dev_Evaluator import DevEvaluator
 
 trainDataArray, devDataArray, featureArray = BinarizeData(sort =0, shuffle=0)
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
-cachedweight = np.zeros((len(trainDataArray[0, :-1])))
+weightVectorAveraged = np.zeros((len(trainDataArray[0, :-1])))
 epochCount = 0
 totalEpoch = 5
 numberTrainingData = len(trainDataArray)
@@ -28,7 +28,7 @@ while epochCount < totalEpoch:
 
         if currentTrainingCount % 1000 == 0:
 
-            devError = DevEvaluator(cachedweight / (currentTrainingCount), devDataArray)
+            devError = DevEvaluator(weightVector - (weightVectorAveraged / currentTrainingCount), devDataArray)
 
             epochFraction = (i / numberTrainingData) + epochCount
 
@@ -56,7 +56,7 @@ while epochCount < totalEpoch:
             weightVector = weightVector + \
             y*xi
 
-        cachedweight = cachedweight + y * currentTrainingCount * xi
+            weightVectorAveraged = weightVectorAveraged + y * currentTrainingCount * xi
 
         currentTrainingCount += 1
 
