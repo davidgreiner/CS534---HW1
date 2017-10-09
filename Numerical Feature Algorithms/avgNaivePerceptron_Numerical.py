@@ -56,7 +56,7 @@ while epochCount < totalEpoch:
             weightVector = weightVector + \
             y*xi
 
-            cachedweight = cachedweight + y * currentTrainingCount * xi
+        cachedweight = cachedweight + y * currentTrainingCount * xi
 
         currentTrainingCount += 1
 
