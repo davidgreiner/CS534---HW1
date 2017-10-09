@@ -1,14 +1,13 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from replacingBinarized import BinarizeData
+from binarizeData import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
 ## Basic Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-featureArray, trainDataArray = BinarizeData("train")
-devDataArray = BinarizeData("dev")
+trainDataArray, devDataArray, featureArray = BinarizeData()
 weightVector = np.zeros((len(featureArray)))
 epochCount = 0
 totalEpoch = 1
@@ -50,14 +49,11 @@ while epochCount < totalEpoch:
             y = -1
 
 
-        idx = trainDataArray[i, 0:-1]
+        xi = trainDataArray[i, 0:-1]
 
-        if y*np.dot(idx, weightVector) <= 0:
+        if y*np.dot(xi, weightVector) <= 0:
             
-            weightVector[idx] = weightVector[idx] + \
-            y*np.ones(len(trainDataArray[i, 0:-1]))
-
-            weightVector[-1] = weightVector[-1] + y
+            weightVector = weightVector + y * xi
 
         currentTrainingCount += 1
 

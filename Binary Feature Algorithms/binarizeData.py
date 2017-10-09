@@ -4,71 +4,86 @@ import numpy as np
 ## Find unique features and construct feature array to be used
 ## in Perceptron.
 
-def BinarizeData(dataSet, sort=0, shuffle=0):
+def BinarizeData(sort=0, shuffle=0):
 
-    if dataSet == "train" or "dev" or "test":
+    rawData = np.genfromtxt("income-data/income.train.txt",
+           dtype=[('f0', '<U4'), ('f1', 'U17'),
+                  ('f2', 'U13'), ('f3', 'U22'),
+                  ('f4', 'U18'), ('f5', 'U19'),
+                  ('f6', 'U7'), ('f7', '<i4'),
+                  ('f8', 'U27'), ('f9', 'U6')],
+           delimiter=", ")
 
-        rawData = np.genfromtxt("income-data/income." + dataSet + ".txt",
-               dtype=[('f0', '<U4'), ('f1', 'U17'),
-                      ('f2', 'U13'), ('f3', 'U22'),
-                      ('f4', 'U18'), ('f5', 'U19'),
-                      ('f6', 'U7'), ('f7', '<i4'),
-                      ('f8', 'U27'), ('f9', 'U6')],
-               delimiter=", ")
+    data = np.array(rawData.tolist())
 
-        data = np.array(rawData.tolist())
+    rawDevData = np.genfromtxt("income-data/income.dev.txt",
+           dtype=[('f0', '<U4'), ('f1', 'U17'),
+                  ('f2', 'U13'), ('f3', 'U22'),
+                  ('f4', 'U18'), ('f5', 'U19'),
+                  ('f6', 'U7'), ('f7', '<U4'),
+                  ('f8', 'U27'), ('f9', 'U6')],
+           delimiter=", ")
 
-        if sort == 1:
-            rawData = np.sort(rawData, order='f9', axis=0)
-            rawData = np.flip(rawData, axis=0)
+    devData = np.array(rawDevData.tolist())
 
-        data = np.array(rawData.tolist())
+    if sort == 1:
+        rawData = np.sort(rawData, order='f9', axis=0)
+        rawData = np.flip(rawData, axis=0)
 
-        if shuffle == 1:
-            np.random.shuffle(data)
+    data = np.array(rawData.tolist())
 
-        for i in range(0, len(data)):
-            data[i, 0] = 'Age ' + data[i, 0]
-            data[i, 7] = data[i, 7] + ' Hours'
+    if shuffle == 1:
+        np.random.shuffle(data)
 
-        if dataSet == 'train':
+    for i in range(0, len(data)):
+        data[i, 0] = 'Age ' + data[i, 0]
+        data[i, 7] = data[i, 7] + ' Hours'
 
-            age = np.unique(data[:,0])
-            work = np.unique(data[:,1])
-            education = np.unique(data[:,2])
-            maritalstatus = np.unique(data[:,3])
-            occupation = np.unique(data[:,4])
-            race = np.unique(data[:,5])
-            gender = np.unique(data[:,6])
-            workhours = np.unique(data[:,7])
-            country = np.unique(data[:,8])
-            salary = np.unique(data[:,9])
+    age = np.unique(data[:,0])
+    work = np.unique(data[:,1])
+    education = np.unique(data[:,2])
+    maritalstatus = np.unique(data[:,3])
+    occupation = np.unique(data[:,4])
+    race = np.unique(data[:,5])
+    gender = np.unique(data[:,6])
+    workhours = np.unique(data[:,7])
+    country = np.unique(data[:,8])
+    salary = np.unique(data[:,9])
 
-            featureArray = np.hstack((age, work, education,
-                        maritalstatus, occupation, race,
-                        gender, workhours, country, ['Bias']))
+    featureArray = np.hstack((age, work, education,
+                maritalstatus, occupation, race,
+                gender, workhours, country, ['Bias']))
 
 
-            binarizedData = []
-            for i in range(0, len(data)):
-                row = np.isin(featureArray, data[i, 0:-1])
-                binarizedData.append(row)
+    binarizedData = []
+    binarizedDevData = []
+        
+    for i in range(0, len(data)):
+        row = np.isin(featureArray[:-1], data[i, 0:-1])
+        row2 = np.append(row.astype(int), [1])
+        binarizedData.append(row2)
 
-            toInt = lambda i: int(i == '>50K')
-            toIntFunc = np.vectorize(toInt)
-            salary = toIntFunc(data[:,-1:])
-            
-            finalData = np.concatenate([binarizedData,salary], axis=1)
-            
-            return featureArray, finalData
+    toInt = lambda i: int(i == '>50K')
+    toIntFunc = np.vectorize(toInt)
+    salary = toIntFunc(data[:,-1:])
+    
+    finalData = np.concatenate([binarizedData,salary], axis=1)
 
-        else:
+    for i in range(0, len(devData)):
+        devRow = np.isin(featureArray[:-1], devData[i, :-1])
+        devRow2 = np.append(devRow.astype(int), [1])
+              
+        binarizedDevData.append(devRow2)
+        #print(binarizedData[i])
 
-            return data
 
-    else:
+    toInt = lambda i: int(i == '>50K')
+    toIntFunc = np.vectorize(toInt)
+    salaryDev = toIntFunc(devData[:,-1:])
 
-        print("Invalid file name")
+    finalDevData = np.concatenate([binarizedDevData,salaryDev], axis=1)
+    
+    return finalData, finalDevData, featureArray
 
 ##def BinarizeData():
 ##
