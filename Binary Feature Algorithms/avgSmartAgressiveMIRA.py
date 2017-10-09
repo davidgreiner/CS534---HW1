@@ -7,8 +7,7 @@ from Dev_Evaluator import DevEvaluator
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-featureArray, trainDataArray = BinarizeData("train", sort=0, shuffle=1)
-devDataArray = BinarizeData("dev")
+trainDataArray, devDataArray, featureArray = BinarizeData(sort=0, shuffle=0)
 
 p = 1.0
 
@@ -49,51 +48,27 @@ while epochCount < totalEpoch:
             print("The error rate for epoch " + str(epochFraction) + \
                   " is " + str(devError) + "%")
 
-        if trainDataArray[i, -1] == '>50K':
+        if trainDataArray[i, -1] == 1:
             y = 1
 
         else:
             y = -1
 
-        idx = np.isin(featureArray, trainDataArray[i, 0:-1])
+        xi = trainDataArray[i, :-1]
 
-        decision = y*(weightVector[idx].sum() + weightVector[-1])
+        decision = y*(np.dot(weightVector, xi))
 
-        if decision < p:
+        if decision <= p:
 
-            if decision > 0:
-
-                marginCorrection = ( (p*y - np.sum(weightVector[idx]) - weightVector[-1]) / \
-                  np.sum(np.power(np.ones(len(trainDataArray[i, :])), 2)) )
+            marginCorrection = ( (y - np.dot(weightVector, xi)) / \
+              np.dot(xi, xi) )
             
-                weightVector[idx] = weightVector[idx] + \
-                marginCorrection*np.ones(len(trainDataArray[i, 0:-1]))
+            weightVector = weightVector + marginCorrection*xi
 
-                weightVector[-1] = weightVector[-1] + marginCorrection
+            weightVectorAveraged = weightVectorAveraged + \
+            currentTrainingCount * marginCorrection * xi
 
-                weightVectorAveraged[idx] = weightVectorAveraged[idx] + \
-                currentTrainingCount * marginCorrection * \
-                np.ones(len(trainDataArray[i, 0:-1]))
-
-                weightVectorAveraged[-1] = weightVectorAveraged[-1] + \
-                                           currentTrainingCount * marginCorrection
-
-            marginCorrection = ( (y - np.sum(weightVector[idx]) - weightVector[-1]) / \
-              np.sum(np.power(np.ones(len(trainDataArray[i, :])), 2)) )
-            
-            weightVector[idx] = weightVector[idx] + \
-            marginCorrection*np.ones(len(trainDataArray[i, 0:-1]))
-
-            weightVector[-1] = weightVector[-1] + marginCorrection
-
-            weightVectorAveraged[idx] = weightVectorAveraged[idx] + \
-            currentTrainingCount * marginCorrection * \
-            np.ones(len(trainDataArray[i, 0:-1]))
-
-            weightVectorAveraged[-1] = weightVectorAveraged[-1] + \
-                                       currentTrainingCount * marginCorrection
-
-##            check = y * (weightVector[idx].sum() + weightVector[-1])
+##            check = y * (np.dot(weightVector, xi))
 ##            print(check)
 
         currentTrainingCount += 1

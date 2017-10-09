@@ -7,8 +7,7 @@ from Dev_Evaluator import DevEvaluator
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-featureArray, trainDataArray = BinarizeData("train", sort=0, shuffle=0)
-devDataArray = BinarizeData("dev")
+trainDataArray, devDataArray, featureArray = BinarizeData(sort=0, shuffle=0)
 
 weightVector = np.zeros((len(featureArray)))
 weightVectorAveraged = np.zeros((len(featureArray)))
@@ -45,25 +44,20 @@ while epochCount < totalEpoch:
             print("The error rate for epoch " + str(epochFraction) + \
                   " is " + str(devError) + "%")
 
-        if trainDataArray[i, -1] == '>50K':
+        if trainDataArray[i, -1] == 1:
             y = 1
 
         else:
             y = -1
 
-        idx = np.isin(featureArray, trainDataArray[i, 0:-1])
+        xi = trainDataArray[i, :-1]
 
-        if y*(weightVector[idx].sum() + weightVector[-1]) <= 0:
+        if y*(np.dot(weightVector, xi)) <= 0:
             
-            weightVector[idx] = weightVector[idx] + \
-            y*np.ones(len(trainDataArray[i, 0:-1]))
+            weightVector = weightVector + y * xi
 
-            weightVector[-1] = weightVector[-1] + y
-
-            weightVectorAveraged[idx] = weightVectorAveraged[idx] + \
-            currentTrainingCount * y * np.ones(len(trainDataArray[i, 0:-1]))
-
-            weightVectorAveraged[-1] = weightVectorAveraged[-1] + currentTrainingCount * y
+            weightVectorAveraged = weightVectorAveraged + \
+            currentTrainingCount * y * xi
 
         currentTrainingCount += 1
 

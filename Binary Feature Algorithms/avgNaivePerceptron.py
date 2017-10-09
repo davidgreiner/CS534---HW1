@@ -3,13 +3,12 @@ import time
 from binarizeData import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
-featureArray, trainDataArray = BinarizeData("train")
-devDataArray = BinarizeData("dev")
+trainDataArray, devDataArray, featureArray = BinarizeData()
 
 weightVector = np.zeros(len(featureArray))
 cachedweight = np.zeros(len(featureArray))
 epochCount = 0
-totalEpoch = 1
+totalEpoch = 5
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 1
 bestErrorRate = 100.0
@@ -23,7 +22,8 @@ while epochCount < totalEpoch:
 
         if currentTrainingCount % 1000 == 0:
 
-            devError = DevEvaluator(cachedweight / (currentTrainingCount), featureArray, devDataArray)
+            devError = DevEvaluator(cachedweight / (currentTrainingCount),
+                                    featureArray, devDataArray)
 
             epochFraction = (i / numberTrainingData) + epochCount
 
@@ -35,28 +35,26 @@ while epochCount < totalEpoch:
                    " is " + str(devError) + "%")
 
 
-        if trainDataArray[i, -1] == '>50K':
+        if trainDataArray[i, -1] == 1:
             y = 1
 
         else:
             y = -1
 
-        idx = np.isin(featureArray, trainDataArray[i, 0:-1])
+        xi = trainDataArray[i, :-1]
 
-        if y * weightVector[idx].sum() + weightVector[-1] <= 0:
+        if y * np.dot(weightVector, xi) <= 0:
 
-            weightVector[idx] = weightVector[idx] + \
-                    y * np.ones((len(trainDataArray[i, 0:-1])))
+            weightVector = weightVector + \
+                    y * xi
 
-            weightVector[-1] = weightVector[-1] + y
-
-            cachedweight[idx] = cachedweight[idx] + y * currentTrainingCount * np.ones((len(trainDataArray[i, 0:-1])))
-
-            cachedweight[-1] = cachedweight[-1] + y * currentTrainingCount
+        cachedweight = cachedweight + weightVector
 
         currentTrainingCount += 1
 
     epochCount += 1
+
+finalWeight = cachedweight / currentTrainingCount
 
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
@@ -64,7 +62,7 @@ print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
 
 positiveFeatures = cachedweight.argsort()[-5:][::-1]
 print("The most positive features are: " + str(featureArray[positiveFeatures]) + \
-      " with weights of: " + str(cachedweight[positiveFeatures]))
+      " with weights of: " + str(finalWeight[positiveFeatures]))
 negativeFeatures = cachedweight.argsort()[0:5][::-1]
 print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
-      " with weights of: " + str(cachedweight[negativeFeatures]))
+      " with weights of: " + str(finalWeight[negativeFeatures]))

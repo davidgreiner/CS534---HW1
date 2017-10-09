@@ -10,15 +10,15 @@ def DevEvaluator(weightVector, featureArray, devDataArray):
 
     for i in range(0, numberDevData):
 
-        if devDataArray[i, -1] == '>50K':
+        if devDataArray[i, -1] == 1:
             y = 1
 
         else:
             y = -1
 
-        idx = np.isin(featureArray, devDataArray[i, 0:-1])
+        xi = devDataArray[i, :-1]
 
-        if y*(weightVector[idx].sum() + weightVector[-1]) <= 0:
+        if y*(np.dot(weightVector, xi)) <= 0:
             
             devWrong += 1
 
