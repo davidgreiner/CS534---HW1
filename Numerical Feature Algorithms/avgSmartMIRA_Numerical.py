@@ -78,7 +78,7 @@ while epochCount < totalEpoch:
 
     epochCount += 1
 
-Predictor(bestWeightVector, testDataArray)
+positiveResults = Predictor(bestWeightVector, testDataArray)
 
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
@@ -92,6 +92,8 @@ print("The most positive features are: " + str(featureArray[positiveFeatures]) +
 negativeFeatures = finalWeightVector.argsort()[0:5][::-1]
 print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
       " with weights of: " + str(finalWeightVector[negativeFeatures]))
+
+print("We predicted " + str(positiveResults) + " >50 of " + str(len(testDataArray)) + " lines of data")
 
 plt.plot(epochFractionPlot, devErrorPlot, 'ro')
 plt.axis([0, totalEpoch, 0, 100])

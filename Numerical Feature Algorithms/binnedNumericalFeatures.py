@@ -74,8 +74,8 @@ def BinarizeData(sort=0, shuffle=0):
 
     for i in range(0, len(data)):
         row = np.isin(featureArray[:-12], data[i, :-1])
-        ageBinned = np.zeroes(5)
-        workhoursBinned = np.zeroes(6)
+        ageBinned = np.zeros(5)
+        workhoursBinned = np.zeros(6)
 
         age_int = int(data[i, 0])
         workhours_int = int(data[i, 7])
@@ -123,8 +123,8 @@ def BinarizeData(sort=0, shuffle=0):
     for i in range(0, len(devData)):
         devRow = np.isin(featureArray[:-12], devData[i, :-1])
 
-        ageBinned = np.zeroes(5)
-        workhoursBinned = np.zeroes(6)
+        ageBinned = np.zeros(5)
+        workhoursBinned = np.zeros(6)
 
         age_int = int(devData[i, 0])
         workhours_int = int(devData[i, 7])
@@ -172,8 +172,8 @@ def BinarizeData(sort=0, shuffle=0):
     for i in range(0, len(testData)):
         testRow = np.isin(featureArray[:-12], testData[i, :-1])
 
-        ageBinned = np.zeroes(5)
-        workhoursBinned = np.zeroes(6)
+        ageBinned = np.zeros(5)
+        workhoursBinned = np.zeros(6)
 
         age_int = int(testData[i, 0])
         workhours_int = int(testData[i, 7])
