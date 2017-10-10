@@ -1,8 +1,17 @@
 import numpy as np
 
 def Predictor(weightVector, testData):
-
-    for i in range(0, len(testData)):
-        
-
-   
+    with open("income-data/income.test.txt", "r") as f:
+        output = open('income-data/income.test.predicted.txt', 'w') 
+        i = 0
+        for line in f:
+            testRow = testData[i, 0:-1]
+            
+            if np.dot(testRow, weightVector) <= 0:
+                # <= 50
+                output.write(line + '<=50')
+            else
+                # >50
+                output.write(line + '>50')
+            i += 1
+        output.close()
