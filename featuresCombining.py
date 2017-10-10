@@ -23,6 +23,16 @@ def BinarizeData(sort=0, shuffle=0):
            delimiter=", ")
        devData = np.array(rawDevData.tolist())
 
+       rawTestData = np.genfromtxt("income-data/income.test.txt",
+              dtype=[('f0', '<i4'), ('f1', 'U17'),
+                     ('f2', 'U13'), ('f3', 'U22'),
+                     ('f4', 'U18'), ('f5', 'U19'),
+                     ('f6', 'U7'), ('f7', '<i4'),
+                     ('f8', 'U27'), ('f9', 'U6')],
+              delimiter=",", autostrip=True)
+
+       testData = np.array(rawTestData.tolist())
+
        if sort == 1:
             rawData = np.sort(rawData, order='f9', axis=0)
             rawData = np.flip(rawData, axis=0)
@@ -70,6 +80,7 @@ def BinarizeData(sort=0, shuffle=0):
 
        binarizedData = []
        binarizedDevData = []
+       binarizedTestData = []
             #permutation = [7,0,1,2,3,4,5,8,6,9]
 
             #isort = np.argsort(permutation)
@@ -91,13 +102,7 @@ def BinarizeData(sort=0, shuffle=0):
        toIntFunc = np.vectorize(toInt)
        salary = toIntFunc(data[:,-1:])
 
-       finalData = np.concatenate([binarizedData,salary], axis=1)
-            
-            #print(binarizedData[0])
-       print(finalData[0])
-       print(len(finalData[0]))
-
-       
+       finalData = np.concatenate([binarizedData,salary], axis=1)       
 
        for i in range(0, len(devData)):
            devRow = np.isin(featureArray[:-4], devData[i, :-1])
@@ -113,91 +118,13 @@ def BinarizeData(sort=0, shuffle=0):
 
        finalDevData = np.concatenate([binarizedDevData,salaryDev], axis=1)
 
-       return finalData, finalDevData, featureArray
+       for i in range(0, len(testData)):
+           testRow = np.isin(featureArray[:-4], testData[i, :-1])
+           testRow2 = np.append(testRow.astype(int), [testData[i, 0], testData[i, 7], educationDict.get(testData[i, 2]) * workDict[testData[i, 1]], 1])
+              
+           binarizedTestData.append(testRow2.astype(int))
 
+       finalTestData = np.concatenate([binarizedTestData,testData[:,-1:]], axis=1)
 
-##def BinarizeData():
-##
-##    data = np.genfromtxt("income-data/income.train.txt",
-##               dtype=None,
-##               delimiter=", ")
-##
-##    age = set(data['f0'])
-##    work = set(data['f1'])
-##    education = set(data['f2'])
-##    relationship = set(data['f3'])
-##    occupation = set(data['f4'])
-##    race = set(data['f5'])
-##    gender = set(data['f6'])
-##    workhours = set(data['f7'])
-##    country = set(data['f8'])
-##    salary = set(data['f9'])
-##
-##    columns = len(age) + len(work) + len(education) + len(relationship) + len(occupation) + len(race) + len(gender) + len(workhours) + len(country) + len(salary)
-##
-##    newdata = [[0 for x in range(columns)] for y in range(data.size)]
-##
-##    for index,row in enumerate(data):
-##        count = 0
-##        for i in age:
-##            if i == row[0]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in work:
-##            if i == row[1]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in education:
-##            if i == row[2]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in relationship:
-##            if i == row[3]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in occupation:
-##            if i == row[4]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in race:
-##            if i == row[5]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in gender:
-##            if i == row[6]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in workhours:
-##            if i == row[7]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in country:
-##            if i == row[8]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##        for i in salary:
-##            if i == row[9]:
-##                newdata[index][count] = 1
-##            else:
-##                newdata[index][count] = 0
-##            count += 1
-##
-##    return newdata, columns
+       return finalData, finalDevData, finalTestData, featureArray
+
