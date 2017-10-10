@@ -7,11 +7,11 @@ def Predictor(weightVector, testData):
         for line in f:
             testRow = testData[i, 0:-1]
             
-            if np.dot(testRow, weightVector) <= 0:
+            if np.dot(testRow.astype(int), weightVector) <= 0:
                 # <= 50
-                output.write(line + '<=50')
-            else
+                output.write(line.replace('\n',' <=50\n'))
+            else:
                 # >50
-                output.write(line + '>50')
+                output.write(line.replace('\n',' >50\n'))
             i += 1
         output.close()
