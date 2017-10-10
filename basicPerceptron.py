@@ -7,7 +7,7 @@ from Dev_Evaluator import DevEvaluator
 ## Basic Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-trainDataArray, devDataArray, featureArray = BinarizeData(sort =0, shuffle=0)
+trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(sort =0, shuffle=0)
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
 epochCount = 0
 totalEpoch = 5
