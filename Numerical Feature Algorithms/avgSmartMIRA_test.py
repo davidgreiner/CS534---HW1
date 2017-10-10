@@ -1,14 +1,14 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from normalizedFeatures import BinarizeData
+from binnedNumericalFeatures import BinarizeData
 from Dev_Evaluator import DevEvaluator
 from Predictor import Predictor
 
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-trainDataArray, devDataArray, featureArray = BinarizeData(shuffle=1)
+trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(shuffle=1)
 
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
 weightVectorAveraged = np.zeros((len(trainDataArray[0, :-1])))
@@ -78,6 +78,8 @@ while epochCount < totalEpoch:
 
     epochCount += 1
 
+positiveResults = Predictor(bestWeightVector, testDataArray)
+
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
@@ -90,6 +92,8 @@ print("The most positive features are: " + str(featureArray[positiveFeatures]) +
 negativeFeatures = finalWeightVector.argsort()[0:5][::-1]
 print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
       " with weights of: " + str(finalWeightVector[negativeFeatures]))
+
+print("We predicted " + str(positiveResults) + " >50 of " + str(len(testDataArray)) + " lines of data")
 
 plt.plot(epochFractionPlot, devErrorPlot, 'ro')
 plt.axis([0, totalEpoch, 0, 100])
