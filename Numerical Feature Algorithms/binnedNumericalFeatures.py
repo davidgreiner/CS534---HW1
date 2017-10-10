@@ -72,7 +72,12 @@ def BinarizeData(sort=0, shuffle=0):
 
     #print(newdata)
 
+    positiveTrainResults = 0
+
     for i in range(0, len(data)):
+        if data[i, -1] == '>50K':
+            positiveTrainResults += 1
+        
         row = np.isin(featureArray[:-12], data[i, :-1])
         ageBinned = np.zeros(5)
         workhoursBinned = np.zeros(6)
@@ -120,7 +125,11 @@ def BinarizeData(sort=0, shuffle=0):
     
     #print(len(finalData[0]))
 
+    positiveDevResults = 0
+
     for i in range(0, len(devData)):
+        if devData[i, -1] == '>50K':
+            positiveDevResults += 1
         devRow = np.isin(featureArray[:-12], devData[i, :-1])
 
         ageBinned = np.zeros(5)
@@ -220,5 +229,7 @@ def BinarizeData(sort=0, shuffle=0):
     #print(len(finalData[0]))
     #print(finalTestData)
     #print(finalData[0])
+    print("Train has " + str(positiveTrainResults) + " of "+ str(len(finalData)) +" positive results")
+    print("Dev has " + str(positiveDevResults) + " of "+ str(len(finalDevData)) +" positive results")
     
     return finalData, finalDevData, finalTestData, featureArray

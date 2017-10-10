@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from replacingBinarized import BinarizeData
+from binnedNumericalFeatures import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
 ## Basic Perceptron algorithm for binary classification
@@ -55,7 +55,8 @@ while epochCount < totalEpoch:
             
             weightVector = weightVector + \
             y*xi
-            cachedweight = cachedweight + weightVector
+
+            cachedweight = cachedweight + y * currentTrainingCount * xi
 
         currentTrainingCount += 1
 
