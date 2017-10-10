@@ -19,7 +19,7 @@ epochIteration = 0
 
 devErrorPlot = []
 epochFractionPlot = []
-learningRate = 0.5
+learningRate = 1
 startTime = time.time()
 numberofErrors = 0
 
@@ -63,7 +63,7 @@ while epochCount < totalEpoch:
             weightVectorAveraged = weightVectorAveraged + y * currentTrainingCount * xi * learningRate
 
             numberofErrors += 1
-            learningRate = learningRate * (1 / 100)
+            learningRate = 1 / numberofErrors
 
         currentTrainingCount += 1
 
