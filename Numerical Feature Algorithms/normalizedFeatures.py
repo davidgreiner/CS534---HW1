@@ -26,22 +26,12 @@ def BinarizeData(sort=0, shuffle=0):
 
     devData = np.array(rawDevData.tolist())
 
-    rawTestData = np.genfromtxt("income-data/income.test.txt",
-       dtype=[('f0', '<i4'), ('f1', 'U17'),
-                  ('f2', 'U13'), ('f3', 'U22'),
-                  ('f4', 'U18'), ('f5', 'U19'),
-                  ('f6', 'U7'), ('f7', '<i4'),
-                  ('f8', 'U27'), ('f9', 'U6')],
-       delimiter=",", autostrip=True)
-
-    testData = np.array(rawTestData.tolist())
-
     if sort == 1:
         rawTrainData = np.sort(rawTrainData, order='f9', axis=0)
         rawTrainData = np.flip(rawTrainData, axis=0)
-
+    
     data = np.array(rawTrainData.tolist())
-
+    
     if shuffle == 1:
         np.random.shuffle(data)
 
@@ -68,7 +58,6 @@ def BinarizeData(sort=0, shuffle=0):
 
     binarizedData = []
     binarizedDevData = []
-    binarizedTestData = []
 
     #print(newdata)
 
@@ -109,6 +98,7 @@ def BinarizeData(sort=0, shuffle=0):
         row4 = np.append(row3, [1])
 
         binarizedData.append(row4.astype(int))
+
         #print(binarizedData[i])
 
 
@@ -116,8 +106,16 @@ def BinarizeData(sort=0, shuffle=0):
     toIntFunc = np.vectorize(toInt)
     salary = toIntFunc(data[:,-1:])
 
-    finalData = np.concatenate([binarizedData,salary], axis=1)
-    
+    unStandData = np.concatenate([binarizedData,salary], axis=1)
+
+    meanData = np.mean(unStandData[:, :-1], axis=0)
+    stdDeviationData= np.std(unStandData[:, :-1], axis=0)
+
+    normData = np.nan_to_num((unStandData[:, :-1] - meanData) / stdDeviationData)
+
+    finalData = unStandData = np.concatenate([normData,salary], axis=1)
+
+
     #print(len(finalData[0]))
 
     for i in range(0, len(devData)):
@@ -160,65 +158,22 @@ def BinarizeData(sort=0, shuffle=0):
         binarizedDevData.append(devRow4.astype(int))
         #print(binarizedData[i])
 
-
     toInt = lambda i: int(i == '>50K')
     toIntFunc = np.vectorize(toInt)
     salaryDev = toIntFunc(devData[:,-1:])
 
-    finalDevData = np.concatenate([binarizedDevData,salaryDev], axis=1)
+    unStandDevData = np.concatenate([binarizedDevData,salaryDev], axis=1)
 
-    #print(testData)
+    meanData = np.mean(unStandDevData[:, :-1], axis=0)
+    stdDeviationData= np.std(unStandDevData[:, :-1], axis=0)
 
-    for i in range(0, len(testData)):
-        testRow = np.isin(featureArray[:-12], testData[i, :-1])
+    normDevData = np.nan_to_num((unStandDevData[:, :-1] - meanData) / stdDeviationData)
 
-        ageBinned = np.zeros(5)
-        workhoursBinned = np.zeros(6)
+    finalDevData = unStandDevData = np.concatenate([normDevData,salaryDev], axis=1)
 
-        age_int = int(testData[i, 0])
-        workhours_int = int(testData[i, 7])
-        
-        if age_int <= 17:
-            ageBinned[0] = 1;
-        elif age_int <= 30:
-            ageBinned[1] = 1;
-        elif age_int <= 50:
-            ageBinned[2] = 1;
-        elif age_int <= 70:
-            ageBinned[3] = 1;
-        else:
-            ageBinned[4] = 1;
-
-        if workhours_int <= 10:
-            workhoursBinned[0] = 1;
-        elif workhours_int <= 20:
-            workhoursBinned[1] = 1;
-        elif workhours_int <= 30:
-            workhoursBinned[2] = 1;
-        elif workhours_int <= 40:
-            workhoursBinned[3] = 1;
-        elif workhours_int <= 50:
-            workhoursBinned[4] = 1;
-        else:
-            workhoursBinned[5] = 1;
-        
-        testRow2 = np.append(testRow.astype(int), ageBinned)
-        testRow3 = np.append(testRow2, workhoursBinned)
-        testRow4 = np.append(testRow3, [1])
-              
-        binarizedTestData.append(testRow4.astype(int))
-        #print(binarizedData[i])
-
-
- #   toInt = lambda i: int(i == '>50K')
- #   toIntFunc = np.vectorize(toInt)
- #   salaryDev = toIntFunc(testData[:,-1:])
-
-    finalTestData = np.concatenate([binarizedTestData,testData[:,-1:]], axis=1)
-    
     #print(binarizedData[0])
     #print(len(finalData[0]))
-    #print(finalTestData)
-    #print(finalData[0])
+    ##print(featureArray)
+    ##print(finalData[0])
     
-    return finalData, finalDevData, finalTestData, featureArray
+    return finalData, finalDevData, featureArray

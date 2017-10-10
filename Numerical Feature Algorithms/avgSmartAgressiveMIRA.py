@@ -1,17 +1,18 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from binnedNumericalFeatures import BinarizeData
+from educationNumerical import BinarizeData
 from Dev_Evaluator import DevEvaluator
-from Predictor import Predictor
 
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(shuffle=1)
+trainDataArray, devDataArray, featureArray = BinarizeData(sort=0, shuffle=0)
 
-weightVector = np.zeros((len(trainDataArray[0, :-1])))
-weightVectorAveraged = np.zeros((len(trainDataArray[0, :-1])))
+p = 1.0
+
+weightVector = np.zeros((len(featureArray)))
+weightVectorAveraged = np.zeros((len(featureArray)))
 epochCount = 0
 totalEpoch = 5
 numberTrainingData = len(trainDataArray)
@@ -25,6 +26,8 @@ epochFractionPlot = []
 startTime = time.time()
 
 while epochCount < totalEpoch:
+
+    np.random.shuffle(trainDataArray)
 
     for i in range(0, numberTrainingData):
 
@@ -41,44 +44,36 @@ while epochCount < totalEpoch:
             if devError < bestErrorRate:
                 bestErrorRate = devError
                 epochIteration = epochFraction
-                bestWeightVector = weightVector - (weightVectorAveraged / currentTrainingCount)
-                
-                
 
             print("The error rate for epoch " + str(epochFraction) + \
                   " is " + str(devError) + "%")
 
         if trainDataArray[i, -1] == 1:
-        
             y = 1
 
         else:
-
             y = -1
 
         xi = trainDataArray[i, :-1]
 
-        decision = y * np.dot(xi, weightVector)
+        decision = y*(np.dot(weightVector, xi))
 
-        if decision <= 0:
+        if decision <= p:
 
-            marginCorrection = ( (y - np.dot(xi, weightVector))) / \
-              (np.dot(xi, xi))
+            marginCorrection = ( (y - np.dot(weightVector, xi)) / \
+              np.dot(xi, xi) )
             
-            weightVector = weightVector + \
-            marginCorrection*xi
+            weightVector = weightVector + marginCorrection*xi
 
             weightVectorAveraged = weightVectorAveraged + \
             currentTrainingCount * marginCorrection * xi
 
-##            check = y * np.dot(xi, weightVector)
+##            check = y * (np.dot(weightVector, xi))
 ##            print(check)
 
         currentTrainingCount += 1
 
     epochCount += 1
-
-positiveResults = Predictor(bestWeightVector, testDataArray)
 
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
@@ -92,8 +87,6 @@ print("The most positive features are: " + str(featureArray[positiveFeatures]) +
 negativeFeatures = finalWeightVector.argsort()[0:5][::-1]
 print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
       " with weights of: " + str(finalWeightVector[negativeFeatures]))
-
-print("We predicted " + str(positiveResults) + " >50 of " + str(len(testDataArray)) + " lines of data")
 
 plt.plot(epochFractionPlot, devErrorPlot, 'ro')
 plt.axis([0, totalEpoch, 0, 100])
