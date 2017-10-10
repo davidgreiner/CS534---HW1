@@ -1,14 +1,14 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from normalizedFeatures import BinarizeData
+from replacingBinarized import BinarizeData
 from Dev_Evaluator import DevEvaluator
 from Predictor import Predictor
 
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-trainDataArray, devDataArray, featureArray = BinarizeData(shuffle=1)
+trainDataArray, devDataArray, featureArray = BinarizeData(shuffle=0)
 
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
 weightVectorAveraged = np.zeros((len(trainDataArray[0, :-1])))
