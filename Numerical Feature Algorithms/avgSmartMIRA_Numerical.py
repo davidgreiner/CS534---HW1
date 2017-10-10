@@ -1,13 +1,14 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from replacingBinarized import BinarizeData
+from binnedNumericalFeatures import BinarizeData
 from Dev_Evaluator import DevEvaluator
+from Predictor import Predictor
 
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-trainDataArray, devDataArray, featureArray = BinarizeData(sort=0, shuffle=0)
+trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(shuffle=1)
 
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
 weightVectorAveraged = np.zeros((len(trainDataArray[0, :-1])))
@@ -40,6 +41,9 @@ while epochCount < totalEpoch:
             if devError < bestErrorRate:
                 bestErrorRate = devError
                 epochIteration = epochFraction
+                bestWeightVector = weightVector - (weightVectorAveraged / currentTrainingCount)
+                
+                
 
             print("The error rate for epoch " + str(epochFraction) + \
                   " is " + str(devError) + "%")
@@ -73,6 +77,8 @@ while epochCount < totalEpoch:
         currentTrainingCount += 1
 
     epochCount += 1
+
+Predictor(bestWeightVector, testDataArray)
 
 print("The program ran for %s seconds" % (time.time() - startTime))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
