@@ -26,14 +26,28 @@ def BinarizeData(sort=0, shuffle=0):
 
     devData = np.array(rawDevData.tolist())
 
+    rawTestData = np.genfromtxt("income-data/income.test.txt",
+       dtype=[('f0', '<i4'), ('f1', 'U17'),
+                  ('f2', 'U13'), ('f3', 'U22'),
+                  ('f4', 'U18'), ('f5', 'U19'),
+                  ('f6', 'U7'), ('f7', '<i4'),
+                  ('f8', 'U27'), ('f9', 'U6')],
+       delimiter=",", autostrip=True)
+
+    testData = np.array(rawTestData.tolist())
+
     if sort == 1:
         rawTrainData = np.sort(rawTrainData, order='f9', axis=0)
         rawTrainData = np.flip(rawTrainData, axis=0)
-    
+
     data = np.array(rawTrainData.tolist())
-    
+
     if shuffle == 1:
         np.random.shuffle(data)
+
+    #for i in range(0, len(data)):
+    #    data[i, 0] = 'Age ' + data[i, 0]
+    #    data[i, 7] = data[i, 7] + ' Hours'
 
     age = np.unique(data[:,0])
     work = np.unique(data[:,1])
@@ -46,38 +60,28 @@ def BinarizeData(sort=0, shuffle=0):
     country = np.unique(data[:,8])
     salary = np.unique(data[:,9])
 
-    featureArray = np.hstack((work,
-                maritalstatus, occupation, race, gender, country,
-                ['Age'], ['WorkHours'], ['Education'], ['Bias']))
-
-    educationDict = {'Preschool': 0, '1st-4th': 1, '5th-6th': 2,
-                     '7th-8th': 3, '9th': 4, '10th': 5,  '11th': 6,
-                     '12th': 7, 'HS-grad': 8, 'Some-college': 9, 'Assoc-voc': 10,
-                     'Assoc-acdm': 11, 'Bachelors': 12, 'Masters': 13,
-                     'Doctorate': 14, 'Prof-school': 15}
+    featureArray = np.hstack((work, education,
+                maritalstatus, occupation, race,
+                gender, country, ['Age'], ['WorkHours'], ['Bias']))
 
 
     binarizedData = []
     binarizedDevData = []
+    binarizedTestData = []
 
-    permutation = [6,0,8,1,2,3,4,7,5,9]
+    permutation = [7,0,1,2,3,4,5,8,6,9]
 
     isort = np.argsort(permutation)
-    ##print(isort)
 
     newdata = data[:, isort]
     newDevData = devData[:, isort]
-    ##print(newdata)
+    newTestData = testData[:, isort]
 
     for i in range(0, len(data)):
-        educationVal = newdata[i, -2]
-    ##    print(educationVal)
-        row = np.isin(featureArray[:-4], newdata[i, :-4])
-        row2 = np.append(row.astype(int), [data[i, 0], data[i, 7],
-                                           educationDict[educationVal], 1])
+        row = np.isin(featureArray[:-3], newdata[i, :-3])
+        row2 = np.append(row.astype(int), [data[i, 0], data[i, 7], 1])
 
         binarizedData.append(row2.astype(int))
-        #print(binarizedData[i])
 
 
     toInt = lambda i: int(i == '>50K')
@@ -86,17 +90,11 @@ def BinarizeData(sort=0, shuffle=0):
 
     finalData = np.concatenate([binarizedData,salary], axis=1)
 
-    #print(binarizedData[0])
-    #print(len(finalData[0]))
-
     for i in range(0, len(devData)):
-        educationVal = newDevData[i, -2]
-        devRow = np.isin(featureArray[:-4], newDevData[i, :-4])
-        devRow2 = np.append(devRow.astype(int), [devData[i, 0], devData[i, 7],
-                                            educationDict[educationVal], 1])
+        devRow = np.isin(featureArray[:-3], newDevData[i, :-3])
+        devRow2 = np.append(devRow.astype(int), [devData[i, 0], devData[i, 7], 1])
               
         binarizedDevData.append(devRow2.astype(int))
-        #print(binarizedData[i])
 
 
     toInt = lambda i: int(i == '>50K')
@@ -105,7 +103,13 @@ def BinarizeData(sort=0, shuffle=0):
 
     finalDevData = np.concatenate([binarizedDevData,salaryDev], axis=1)
 
-    #print(binarizedData[0])
-    #print(len(finalData[0]))
+    for i in range(0, len(testData)):
+        testRow = np.isin(featureArray[:-3], newTestData[i, :-3])
+        testRow2 = np.append(testRow.astype(int), [testData[i, 0], testData[i, 7], 1])
+              
+        binarizedTestData.append(testRow2.astype(int))
+
+    finalTestData = np.concatenate([binarizedTestData,testData[:,-1:]], axis=1)
     
-    return finalData, finalDevData, featureArray
+    
+    return finalData, finalDevData, finalTestData, featureArray
