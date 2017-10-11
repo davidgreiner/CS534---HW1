@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from educationNumerical import BinarizeData
+from featuresEducationNumerical import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
 ## Averaged Smart Perceptron algorithm for binary classification

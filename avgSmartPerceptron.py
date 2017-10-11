@@ -1,10 +1,10 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from replacingBinarized import BinarizeData
+from featuresBinarized import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
-## Basic Perceptron algorithm for binary classification
+## Averaged, smart perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
 trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(sort =0, shuffle=0)
@@ -28,12 +28,8 @@ while epochCount < totalEpoch:
 
         if currentTrainingCount % 1000 == 0:
 
-<<<<<<< HEAD
             devError = DevEvaluator(weightVector - (weightVectorAveraged / currentTrainingCount), \
                                     devDataArray)
-=======
-            devError = DevEvaluator(weightVector - (weightVectorAveraged / currentTrainingCount), devDataArray)
->>>>>>> 833efb5ac6348a5a7e1a9a75640465aada6bc427
 
             epochFraction = (i / numberTrainingData) + epochCount
 
@@ -53,17 +49,6 @@ while epochCount < totalEpoch:
         else:
             y = -1
 
-<<<<<<< HEAD
-        xi = trainDataArray[i, :-1]
-
-        if y*(np.dot(weightVector, xi)) <= 0:
-            
-            weightVector = weightVector + y * xi
-
-            weightVectorAveraged = weightVectorAveraged + \
-            currentTrainingCount * y * xi
-=======
-
         xi = trainDataArray[i, 0:-1]
 
         if y*np.dot(xi, weightVector) <= 0:
@@ -72,14 +57,11 @@ while epochCount < totalEpoch:
             y*xi
 
             weightVectorAveraged = weightVectorAveraged + y * currentTrainingCount * xi
->>>>>>> 833efb5ac6348a5a7e1a9a75640465aada6bc427
-
         currentTrainingCount += 1
 
     epochCount += 1
 
 print("The program ran for %s seconds" % (time.time() - startTime))
-<<<<<<< HEAD
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
 
@@ -88,10 +70,11 @@ finalWeightVector = weightVector - (weightVectorAveraged / currentTrainingCount)
 positiveFeatures = finalWeightVector.argsort()[-5:][::-1]
 print("The most positive features are: " + str(featureArray[positiveFeatures]) + \
       " with weights of: " + str(finalWeightVector[positiveFeatures]))
+
 negativeFeatures = finalWeightVector.argsort()[0:5][::-1]
 print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
       " with weights of: " + str(finalWeightVector[negativeFeatures]))
-=======
+
 positiveFeatures = weightVector.argsort()[-5:][::-1]
 print("The most positive features are: " + str(featureArray[positiveFeatures]) + \
       " with weights of: " + str(weightVector[positiveFeatures]))
@@ -100,7 +83,6 @@ print("The most negative features are: " + str(featureArray[negativeFeatures]) +
       " with weights of: " + str(weightVector[negativeFeatures]))
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
->>>>>>> 833efb5ac6348a5a7e1a9a75640465aada6bc427
 
 plt.plot(epochFractionPlot, devErrorPlot, 'ro')
 plt.axis([0, totalEpoch, 0, 100])
