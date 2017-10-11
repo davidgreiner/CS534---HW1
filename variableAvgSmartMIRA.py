@@ -1,19 +1,19 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from normalizedFeatures import BinarizeData
+from featuresBinnedNumerical import BinarizeData
 from Dev_Evaluator import DevEvaluator
 from Predictor import Predictor
 
 ## Averaged Smart Perceptron algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
-trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(shuffle=1)
+trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(shuffle=0)
 
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
 weightVectorAveraged = np.zeros((len(trainDataArray[0, :-1])))
 epochCount = 0
-totalEpoch = 5
+totalEpoch = 1
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 1
 bestErrorRate = 100.0
@@ -30,7 +30,7 @@ while epochCount < totalEpoch:
 
     for i in range(0, numberTrainingData):
 
-        if currentTrainingCount % 1000 == 0:
+        if currentTrainingCount % 20 == 0:
 
             devError = DevEvaluator(weightVector - (weightVectorAveraged / currentTrainingCount), \
                                     devDataArray)
@@ -47,8 +47,8 @@ while epochCount < totalEpoch:
                 
                 
 
-            print("The error rate for epoch " + str(epochFraction) + \
-                  " is " + str(devError) + "%")
+##            print("The error rate for epoch " + str(epochFraction) + \
+##                  " is " + str(devError) + "%")
 
         if trainDataArray[i, -1] == 1:
         
@@ -75,7 +75,7 @@ while epochCount < totalEpoch:
 
             numberofErrors += 1
 
-            learningRate = learningRate * (1 / numberofErrors)
+            learningRate = learningRate * (9999 / 10000) + 0.00001
 
 ##            check = y * np.dot(xi, weightVector)
 ##            print(check)

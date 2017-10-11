@@ -89,7 +89,7 @@ def BinarizeData(sort=0, shuffle=0):
             ageBinned[0] = 1;
         elif age_int <= 30:
             ageBinned[1] = 1;
-        elif age_int <= 50:
+        elif age_int <= 60:
             ageBinned[2] = 1;
         elif age_int <= 70:
             ageBinned[3] = 1;
@@ -102,9 +102,9 @@ def BinarizeData(sort=0, shuffle=0):
             workhoursBinned[1] = 1;
         elif workhours_int <= 30:
             workhoursBinned[2] = 1;
-        elif workhours_int <= 40:
+        elif workhours_int <= 60:
             workhoursBinned[3] = 1;
-        elif workhours_int <= 50:
+        elif workhours_int <= 80:
             workhoursBinned[4] = 1;
         else:
             workhoursBinned[5] = 1;
@@ -142,7 +142,7 @@ def BinarizeData(sort=0, shuffle=0):
             ageBinned[0] = 1;
         elif age_int <= 30:
             ageBinned[1] = 1;
-        elif age_int <= 50:
+        elif age_int <= 60:
             ageBinned[2] = 1;
         elif age_int <= 70:
             ageBinned[3] = 1;
@@ -155,9 +155,9 @@ def BinarizeData(sort=0, shuffle=0):
             workhoursBinned[1] = 1;
         elif workhours_int <= 30:
             workhoursBinned[2] = 1;
-        elif workhours_int <= 40:
+        elif workhours_int <= 60:
             workhoursBinned[3] = 1;
-        elif workhours_int <= 50:
+        elif workhours_int <= 80:
             workhoursBinned[4] = 1;
         else:
             workhoursBinned[5] = 1;
@@ -191,7 +191,7 @@ def BinarizeData(sort=0, shuffle=0):
             ageBinned[0] = 1;
         elif age_int <= 30:
             ageBinned[1] = 1;
-        elif age_int <= 50:
+        elif age_int <= 60:
             ageBinned[2] = 1;
         elif age_int <= 70:
             ageBinned[3] = 1;
@@ -204,9 +204,9 @@ def BinarizeData(sort=0, shuffle=0):
             workhoursBinned[1] = 1;
         elif workhours_int <= 30:
             workhoursBinned[2] = 1;
-        elif workhours_int <= 40:
+        elif workhours_int <= 60:
             workhoursBinned[3] = 1;
-        elif workhours_int <= 50:
+        elif workhours_int <= 80:
             workhoursBinned[4] = 1;
         else:
             workhoursBinned[5] = 1;

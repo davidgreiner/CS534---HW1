@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from replacingBinarized import BinarizeData
+from featuresBinnedNumerical import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
 ## Basic Perceptron algorithm for binary classification
@@ -11,7 +11,7 @@ trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(sort =0
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
 weightVectorAveraged = np.zeros((len(trainDataArray[0, :-1])))
 epochCount = 0
-totalEpoch = 5
+totalEpoch = 1
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 1
 bestErrorRate = 100.0
@@ -19,7 +19,7 @@ epochIteration = 0
 
 devErrorPlot = []
 epochFractionPlot = []
-learningRate = 0.5
+learningRate = 1
 startTime = time.time()
 numberofErrors = 0
 
@@ -27,14 +27,18 @@ while epochCount < totalEpoch:
 
     for i in range(0, numberTrainingData):
 
-        if currentTrainingCount % 1000 == 0:
+        if currentTrainingCount % 20 == 0:
 
             devError = DevEvaluator(weightVector - (weightVectorAveraged / currentTrainingCount), \
                                     devDataArray)
 
-            devError = DevEvaluator(weightVector - (weightVectorAveraged / currentTrainingCount), devDataArray)
-
             epochFraction = (i / numberTrainingData) + epochCount
+            
+            if devError < bestErrorRate:
+                bestErrorRate = devError
+                epochIteration = epochFraction
+                bestWeightVector = weightVector - (weightVectorAveraged / currentTrainingCount)
+
 
             devErrorPlot.append(devError)
             epochFractionPlot.append(epochFraction)
@@ -43,8 +47,8 @@ while epochCount < totalEpoch:
                 bestErrorRate = devError
                 epochIteration = epochFraction
 
-            print("The error rate for epoch " + str(epochFraction) + \
-                  " is " + str(devError) + "%")
+##            print("The error rate for epoch " + str(epochFraction) + \
+##                  " is " + str(devError) + "%")
 
         if trainDataArray[i, -1] == 1:
             y = 1
@@ -63,15 +67,11 @@ while epochCount < totalEpoch:
             weightVectorAveraged = weightVectorAveraged + y * currentTrainingCount * xi * learningRate
 
             numberofErrors += 1
-            learningRate = learningRate * (1 / 100)
+            learningRate = learningRate * (9925 / 10000) + 0.001
 
         currentTrainingCount += 1
 
     epochCount += 1
-
-print("The program ran for %s seconds" % (time.time() - startTime))
-print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
-      str(epochIteration))
 
 finalWeightVector = weightVector - (weightVectorAveraged / currentTrainingCount)
 

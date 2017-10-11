@@ -84,7 +84,7 @@ def BinarizeData(sort=0, shuffle=0):
             ageBinned[0] = 1;
         elif age_int <= 30:
             ageBinned[1] = 1;
-        elif age_int <= 50:
+        elif age_int <= 60:
             ageBinned[2] = 1;
         elif age_int <= 70:
             ageBinned[3] = 1;
@@ -97,9 +97,9 @@ def BinarizeData(sort=0, shuffle=0):
             workhoursBinned[1] = 1;
         elif workhours_int <= 30:
             workhoursBinned[2] = 1;
-        elif workhours_int <= 40:
+        elif workhours_int <= 60:
             workhoursBinned[3] = 1;
-        elif workhours_int <= 50:
+        elif workhours_int <= 80:
             workhoursBinned[4] = 1;
         else:
             workhoursBinned[5] = 1;
@@ -142,7 +142,7 @@ def BinarizeData(sort=0, shuffle=0):
             ageBinned[0] = 1;
         elif age_int <= 30:
             ageBinned[1] = 1;
-        elif age_int <= 50:
+        elif age_int <= 60:
             ageBinned[2] = 1;
         elif age_int <= 70:
             ageBinned[3] = 1;
@@ -155,9 +155,9 @@ def BinarizeData(sort=0, shuffle=0):
             workhoursBinned[1] = 1;
         elif workhours_int <= 30:
             workhoursBinned[2] = 1;
-        elif workhours_int <= 40:
+        elif workhours_int <= 60:
             workhoursBinned[3] = 1;
-        elif workhours_int <= 50:
+        elif workhours_int <= 80:
             workhoursBinned[4] = 1;
         else:
             workhoursBinned[5] = 1;
@@ -227,14 +227,14 @@ def BinarizeData(sort=0, shuffle=0):
         binarizedTestData.append(testRow4.astype(int))
         #print(binarizedData[i])
 
-    unStandTestData = np.concatenate([binarizedDevData,testData[:,-1:]], axis=1)
+    unStandTestData = binarizedTestData
 
-    meanData = np.mean(unStandTestData[:, :-1], axis=0)
-    stdDeviationData= np.std(unStandTestData[:, :-1], axis=0)
+    meanData = np.mean(unStandTestData, axis=0)
+    stdDeviationData= np.std(unStandTestData, axis=0)
 
-    normTestData = np.nan_to_num((unStandTestData[:, :-1] - meanData) / stdDeviationData)
+    normTestData = np.nan_to_num((unStandTestData - meanData) / stdDeviationData)
 
-    finalTestData = unStandTestData = np.concatenate([normTestData,testData[:,-1:]], axis=1)
+    finalTestData = normTestData
 
     
     
