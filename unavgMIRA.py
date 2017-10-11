@@ -5,7 +5,7 @@ from featuresBinarized import BinarizeData
 from Dev_Evaluator import DevEvaluator
 from Predictor import Predictor
 
-## Averaged Smart Perceptron algorithm for binary classification
+## Unaveraged MIRA algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
 trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(shuffle=1)

@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 from featuresBinnedNumerical import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
-## Basic Perceptron algorithm for binary classification
-## of individuals earning less than or more than 50K/year.
+## Averaged, smart perceptron with a variable learning rate
+## for binary classification of individuals earning less than
+## or more than 50K/year.
 
 trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(sort =0, shuffle=0)
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
@@ -67,7 +68,7 @@ while epochCount < totalEpoch:
             weightVectorAveraged = weightVectorAveraged + y * currentTrainingCount * xi * learningRate
 
             numberofErrors += 1
-            learningRate = learningRate * (9925 / 10000) + 0.001
+            learningRate = learningRate * (9925 / 10000) + 0.00101
 
         currentTrainingCount += 1
 
@@ -82,11 +83,7 @@ negativeFeatures = finalWeightVector.argsort()[0:5][::-1]
 print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
       " with weights of: " + str(finalWeightVector[negativeFeatures]))
 positiveFeatures = weightVector.argsort()[-5:][::-1]
-print("The most positive features are: " + str(featureArray[positiveFeatures]) + \
-      " with weights of: " + str(weightVector[positiveFeatures]))
-negativeFeatures = weightVector.argsort()[0:5][::-1]
-print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
-      " with weights of: " + str(weightVector[negativeFeatures]))
+
 print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
       str(epochIteration))
 

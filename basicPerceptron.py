@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from featuresReplaceBinarizedAgeHours import BinarizeData
+from featuresBinarized import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
 ## Basic Perceptron algorithm for binary classification

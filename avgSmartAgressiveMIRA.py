@@ -1,10 +1,10 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from featuresEducationNumerical import BinarizeData
+from featuresBinarized import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
-## Averaged Smart Perceptron algorithm for binary classification
+## Averaged, smart, a-MIRA algorithm for binary classification
 ## of individuals earning less than or more than 50K/year.
 
 trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(sort=0, shuffle=0)

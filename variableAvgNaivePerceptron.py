@@ -1,17 +1,18 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from featuresReplaceBinarizedAgeHours import BinarizeData
+from featuresBinnedNumerical import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
-## Basic Perceptron algorithm for binary classification
-## of individuals earning less than or more than 50K/year.
+## Averaged, naive perceptron algorithm with variable learning rate
+## for binary classification of individuals earning less than or more
+## than 50K/year.
 
 trainDataArray, devDataArray, testDataArray, featureArray = BinarizeData(sort =0, shuffle=0)
 weightVector = np.zeros((len(trainDataArray[0, :-1])))
 weightVectorAveraged = np.zeros((len(trainDataArray[0, :-1])))
 epochCount = 0
-totalEpoch = 5
+totalEpoch = 1
 numberTrainingData = len(trainDataArray)
 currentTrainingCount = 1
 bestErrorRate = 100.0
@@ -28,13 +29,11 @@ while epochCount < totalEpoch:
 
     for i in range(0, numberTrainingData):
 
-        if currentTrainingCount % 1000 == 0:
+        if currentTrainingCount % 200 == 0:
 
 
-            devError = DevEvaluator(weightVector - (weightVectorAveraged / currentTrainingCount), \
+            devError = DevEvaluator(weightVectorAveraged / currentTrainingCount, \
                                     devDataArray)
-
-            devError = DevEvaluator(weightVector - (weightVectorAveraged / currentTrainingCount), devDataArray)
 
             epochFraction = (i / numberTrainingData) + epochCount
 
@@ -58,14 +57,13 @@ while epochCount < totalEpoch:
 
         if y*np.dot(xi, weightVector) <= 0:
             
-            weightVector = weightVector + \
-            y*xi*learningRate
+            weightVector = weightVector + y * xi * learningRate
 
             numberofErrors += 1
 
-            learningRate = learningRate * (1 / numberofErrors)
+            learningRate = learningRate * (9999 / 10000) + 0.00001
 
-        weightVectorAveraged = weightVectorAveraged + y * currentTrainingCount * xi * learningRate
+        weightVectorAveraged = weightVectorAveraged + weightVector
 
         currentTrainingCount += 1
 
