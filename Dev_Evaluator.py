@@ -7,6 +7,7 @@ def DevEvaluator(weightVector, devDataArray):
 
     numberDevData = len(devDataArray)
     devWrong = 0
+##    positiveCounter = 0
 
     for i in range(0, numberDevData):
 
@@ -18,9 +19,13 @@ def DevEvaluator(weightVector, devDataArray):
 
         xi = devDataArray[i, 0:-1]
 
+##        if np.dot(xi, weightVector) > 0:
+##            positiveCounter += 1
+
         if y*np.dot(xi, weightVector) <= 0:
             
             devWrong += 1
 
     devError = (devWrong / len(devDataArray)) * 100
+##    positivePercent = (positiveCounter / len(devDataArray)) * 100
     return devError
