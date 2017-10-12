@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from featuresAddNumericAgeHours import BinarizeData
+from featuresCombining import BinarizeData
 from Dev_Evaluator import DevEvaluator
 from Predictor import Predictor
 

@@ -67,7 +67,7 @@ def BinarizeData(sort=0, shuffle=0):
                          '7th-8th': 3, '9th': 4, '10th': 5,  '11th': 6,
                          '12th': 7, 'HS-grad': 8, 'Some-college': 9, 'Assoc-voc': 10,
                          'Assoc-acdm': 11, 'Bachelors': 12, 'Masters': 13,
-                         'Doctorate': 14, 'Prof-school': 15}
+                         'Prof-school': 14, 'Doctorate': 15}
 
 
        workDict = {}
