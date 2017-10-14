@@ -36,14 +36,14 @@ def BinarizeData(sort=0, shuffle=0):
 
     testData = np.array(rawTestData.tolist())
 
-    if sort == 1:
-        rawTrainData = np.sort(rawTrainData, order='f9', axis=0)
-        rawTrainData = np.flip(rawTrainData, axis=0)
-    
-    data = np.array(rawTrainData.tolist())
-    
-    if shuffle == 1:
-        np.random.shuffle(data)
+    ##if sort == 1:
+    ##    rawTrainData = np.sort(rawTrainData, order='f9', axis=0)
+    ##    rawTrainData = np.flip(rawTrainData, axis=0)
+    ##
+    ##data = np.array(rawTrainData.tolist())
+    ##
+    ##if shuffle == 1:
+    ##    np.random.shuffle(data)
 
     age = np.unique(data[:,0])
     work = np.unique(data[:,1])
@@ -119,13 +119,12 @@ def BinarizeData(sort=0, shuffle=0):
 
     unStandData = np.concatenate([binarizedData,salary], axis=1)
 
-    meanData = np.mean(unStandData[:, :-1], axis=0)
-    stdDeviationData= np.std(unStandData[:, :-1], axis=0)
+    meanData = np.mean(unStandData[:, :-2], axis=0)
+    stdDeviationData= np.std(unStandData[:, :-2], axis=0)
 
-    normData = np.nan_to_num((unStandData[:, :-1] - meanData) / stdDeviationData)
+    standData = np.nan_to_num((unStandData[:, :-2] - meanData) / stdDeviationData)
 
-    finalData = unStandData = np.concatenate([normData,salary], axis=1)
-
+    finalData = np.concatenate([standData, unStandData[:, -2:]], axis=1)
 
     #print(len(finalData[0]))
 
@@ -175,12 +174,12 @@ def BinarizeData(sort=0, shuffle=0):
 
     unStandDevData = np.concatenate([binarizedDevData,salaryDev], axis=1)
 
-    meanData = np.mean(unStandDevData[:, :-1], axis=0)
-    stdDeviationData= np.std(unStandDevData[:, :-1], axis=0)
+    meanData = np.mean(unStandDevData[:, :-2], axis=0)
+    stdDeviationData= np.std(unStandDevData[:, :-2], axis=0)
 
-    normDevData = np.nan_to_num((unStandDevData[:, :-1] - meanData) / stdDeviationData)
+    standDevData = np.nan_to_num((unStandDevData[:, :-2] - meanData) / stdDeviationData)
 
-    finalDevData = unStandDevData = np.concatenate([normDevData,salaryDev], axis=1)
+    finalDevData = np.concatenate([standDevData, unStandDevData[:, -2:]], axis=1)
 
     #print(binarizedData[0])
     #print(len(finalData[0]))
@@ -227,15 +226,13 @@ def BinarizeData(sort=0, shuffle=0):
         binarizedTestData.append(testRow4.astype(int))
         #print(binarizedData[i])
 
-    unStandTestData = binarizedTestData
+    unStandTestData = np.array(binarizedTestData)
 
-    meanData = np.mean(unStandTestData, axis=0)
-    stdDeviationData= np.std(unStandTestData, axis=0)
+    meanData = np.mean(unStandTestData[:, :-1], axis=0)
+    stdDeviationData= np.std(unStandTestData[:, :-1], axis=0)
 
-    normTestData = np.nan_to_num((unStandTestData - meanData) / stdDeviationData)
+    standTestData = np.nan_to_num((unStandTestData[:, :-1] - meanData) / stdDeviationData)
 
-    finalTestData = normTestData
-
-    
+    finalTestData = np.concatenate((standTestData, unStandTestData[:, -1:]), axis=1)    
     
     return finalData, finalDevData, finalTestData, featureArray
