@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from featuresBinarized import BinarizeData
+from featuresNormalized import BinarizeData
 from Dev_Evaluator import DevEvaluator
 
 ## Averaged, smart perceptron algorithm for binary classification
@@ -74,15 +74,6 @@ print("The most positive features are: " + str(featureArray[positiveFeatures]) +
 negativeFeatures = finalWeightVector.argsort()[0:5][::-1]
 print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
       " with weights of: " + str(finalWeightVector[negativeFeatures]))
-
-positiveFeatures = weightVector.argsort()[-5:][::-1]
-print("The most positive features are: " + str(featureArray[positiveFeatures]) + \
-      " with weights of: " + str(weightVector[positiveFeatures]))
-negativeFeatures = weightVector.argsort()[0:5][::-1]
-print("The most negative features are: " + str(featureArray[negativeFeatures]) + \
-      " with weights of: " + str(weightVector[negativeFeatures]))
-print("The best error rate was " + str(bestErrorRate) + " at epoch " + \
-      str(epochIteration))
 
 plt.plot(epochFractionPlot, devErrorPlot, 'ro')
 plt.axis([0, totalEpoch, 0, 100])
